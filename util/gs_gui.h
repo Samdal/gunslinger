@@ -6870,15 +6870,15 @@ GS_API_DECL int32_t gs_gui_textbox_ex(gs_gui_context_t* ctx, char* buf, int32_t 
 GS_API_DECL int32_t gs_gui_slider_ex(gs_gui_context_t* ctx, gs_gui_real* value, gs_gui_real low, gs_gui_real high, gs_gui_real step, 
         const char* fmt, const gs_gui_selector_desc_t* desc, uint64_t opt)
 {
-	char buf[GS_GUI_MAX_FMT + 1];
-	gs_gui_rect_t thumb;
-	int32_t x, w, res = 0;
-	gs_gui_real last = *value, v = last;
+    char buf[GS_GUI_MAX_FMT + 1];
+    gs_gui_rect_t thumb;
+    int32_t x, w, res = 0;
+    gs_gui_real last = *value, v = last;
 
     gs_gui_id id;
     if (opt & GS_GUI_OPT_KEEPCURRENTID)
         id = ctx->last_id;
-	else
+    else
         id = gs_gui_get_id(ctx, &value,  sizeof(value));
 
     int32_t elementid = GS_GUI_ELEMENT_INPUT; 
@@ -6903,49 +6903,49 @@ GS_API_DECL int32_t gs_gui_slider_ex(gs_gui_context_t* ctx, gs_gui_real* value, 
 
     // Temporary copy of style
     gs_gui_style_t* save = gs_gui_push_style(ctx, &style); 
-	gs_gui_rect_t base = gs_gui_layout_next(ctx);
+    gs_gui_rect_t base = gs_gui_layout_next(ctx);
 
-	/* handle text input mode */
-	if (gs_gui_number_textbox(ctx, &v, base, id, desc)) {return res;}
+    /* handle text input mode */
+    if (gs_gui_number_textbox(ctx, &v, base, id, desc)) {return res;}
 
-	/* handle normal mode */
-	gs_gui_update_control(ctx, id, base, opt);
+    /* handle normal mode */
+    gs_gui_update_control(ctx, id, base, opt);
 
-	/* handle input */
-	if (ctx->focus == id &&
-			(ctx->mouse_down | ctx->mouse_pressed) == GS_GUI_MOUSE_LEFT)
-	{
-		v = low + (ctx->mouse_pos.x - base.x) * (high - low) / base.w;
-		if (step) {v = (((v + step / 2) / step)) * step;}
-	}
+    /* handle input */
+    if (ctx->focus == id &&
+            (ctx->mouse_down | ctx->mouse_pressed) == GS_GUI_MOUSE_LEFT)
+    {
+        v = low + (ctx->mouse_pos.x - base.x) * (high - low) / base.w;
+        if (step) {v = (((v + step / 2) / step)) * step;}
+    }
 
-	/* clamp and store value, update res */
-	*value = v = gs_clamp(v, low, high);
-	if (last != v) {res |= GS_GUI_RES_CHANGE;} 
+    /* clamp and store value, update res */
+    *value = v = gs_clamp(v, low, high);
+    if (last != v) {res |= GS_GUI_RES_CHANGE;}
 
-	/* draw base */
-	gs_gui_draw_control_frame(ctx, id, base, GS_GUI_ELEMENT_INPUT, opt);
+    /* draw base */
+    gs_gui_draw_control_frame(ctx, id, base, GS_GUI_ELEMENT_INPUT, opt);
 
-	/* draw control */
-	w = style.thumb_size; // Don't like this...
+    /* draw control */
+    w = style.thumb_size; // Don't like this...
 
     if (high == low) // don't divide by zero
         x = 0;
     else
         x = (int32_t)((v - low) * (base.w - w) / (high - low));
 
-	thumb = gs_gui_rect((f32)base.x + (f32)x, base.y, (f32)w, base.h);
-	gs_gui_draw_control_frame(ctx, id, thumb, GS_GUI_ELEMENT_BUTTON, opt); 
+    thumb = gs_gui_rect((f32)base.x + (f32)x, base.y, (f32)w, base.h);
+    gs_gui_draw_control_frame(ctx, id, thumb, GS_GUI_ELEMENT_BUTTON, opt);
 
-	/* draw text	*/
+    /* draw text    */
     style.colors[GS_GUI_COLOR_BACKGROUND] = ctx->style_sheet->styles[GS_GUI_ELEMENT_TEXT][state].colors[GS_GUI_COLOR_BACKGROUND];
-	gs_snprintf(buf, GS_GUI_MAX_FMT, fmt, v);
-	gs_gui_draw_control_text(ctx, buf, base, &style, opt);  // oh...bg
+    gs_snprintf(buf, GS_GUI_MAX_FMT, fmt, v);
+    gs_gui_draw_control_text(ctx, buf, base, &style, opt);  // oh...bg
 
     // Pop style
     gs_gui_pop_style(ctx, save);
 
-	return res;
+    return res;
 } 
 
 GS_API_DECL int32_t gs_gui_number_ex(gs_gui_context_t* ctx, gs_gui_real* value, gs_gui_real step, const char* fmt, 
