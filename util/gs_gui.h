@@ -6928,7 +6928,12 @@ GS_API_DECL int32_t gs_gui_slider_ex(gs_gui_context_t* ctx, gs_gui_real* value, 
 
 	/* draw control */
 	w = style.thumb_size; // Don't like this...
-	x = (int32_t)((v - low) * (base.w - w) / (high - low));
+
+    if (high == low) // don't divide by zero
+        x = 0;
+    else
+        x = (int32_t)((v - low) * (base.w - w) / (high - low));
+
 	thumb = gs_gui_rect((f32)base.x + (f32)x, base.y, (f32)w, base.h);
 	gs_gui_draw_control_frame(ctx, id, thumb, GS_GUI_ELEMENT_BUTTON, opt); 
 
