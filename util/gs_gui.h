@@ -5529,7 +5529,7 @@ gs_gui_draw_custom(gs_gui_context_t* ctx, gs_gui_rect_t rect,
 	gs_gui_id res = (idx > 0) ? ctx->id_stack.items[idx - 1] : GS_GUI_HASH_INITIAL;
 
 	/* do custom command */
-	cmd = gs_gui_push_command(ctx, GS_GUI_COMMAND_CUSTOM, sizeof(gs_gui_customcommand_t));
+	cmd = gs_gui_push_command(ctx, GS_GUI_COMMAND_CUSTOM, sizeof(gs_gui_customcommand_t) + sz);
 	cmd->custom.clip = rect;
     cmd->custom.viewport = viewport;
 	cmd->custom.cb = cb;
