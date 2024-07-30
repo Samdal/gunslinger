@@ -205,11 +205,16 @@ enum {
 };
 
 enum {
-	GS_GUI_KEY_SHIFT		= (1 << 0),
-	GS_GUI_KEY_CTRL			= (1 << 1),
-	GS_GUI_KEY_ALT			= (1 << 2),
-	GS_GUI_KEY_BACKSPACE	= (1 << 3),
-	GS_GUI_KEY_RETURN		= (1 << 4)
+    GS_GUI_KEY_SHIFT        = (1 << 0),
+    GS_GUI_KEY_CTRL         = (1 << 1),
+    GS_GUI_KEY_ALT          = (1 << 2),
+    GS_GUI_KEY_BACKSPACE    = (1 << 3),
+    GS_GUI_KEY_RETURN       = (1 << 4),
+    GS_GUI_KEY_TAB          = (1 << 5),
+    GS_GUI_KEY_LEFT         = (1 << 6),
+    GS_GUI_KEY_RIGHT        = (1 << 7),
+    GS_GUI_KEY_UP           = (1 << 8),
+    GS_GUI_KEY_DOWN         = (1 << 9),
 }; 
 
 #define GS_GUI_OPT_NOSTYLING (GS_GUI_OPT_NOSTYLEBORDER | GS_GUI_OPT_NOSTYLEBACKGROUND | GS_GUI_OPT_NOSTYLESHADOW)
@@ -3566,7 +3571,7 @@ static void gs_gui_init_default_styles(gs_gui_context_t* ctx)
 } 
 
 static char button_map[256] = gs_default_val(); 
-static char key_map[512] = gs_default_val();
+static int key_map[512] = gs_default_val();
 
 GS_API_DECL gs_gui_context_t gs_gui_new(uint32_t window_hndl)
 {
@@ -3590,18 +3595,23 @@ GS_API_DECL void gs_gui_init(gs_gui_context_t *ctx, uint32_t window_hndl)
     gs_gui_tab_bar_t tb = gs_default_val();
     gs_slot_array_insert(ctx->tab_bars, tb);
 
-    button_map[GS_MOUSE_LBUTTON & 0xff] = GS_GUI_MOUSE_LEFT;
-    button_map[GS_MOUSE_RBUTTON & 0xff] = GS_GUI_MOUSE_RIGHT;
-    button_map[GS_MOUSE_MBUTTON & 0xff] = GS_GUI_MOUSE_MIDDLE;
+    button_map[GS_MOUSE_LBUTTON & 255] = GS_GUI_MOUSE_LEFT;
+    button_map[GS_MOUSE_RBUTTON & 255] = GS_GUI_MOUSE_RIGHT;
+    button_map[GS_MOUSE_MBUTTON & 255] = GS_GUI_MOUSE_MIDDLE;
 
-    key_map[GS_KEYCODE_LEFT_SHIFT    & 0xff] = GS_GUI_KEY_SHIFT;
-    key_map[GS_KEYCODE_RIGHT_SHIFT   & 0xff] = GS_GUI_KEY_SHIFT;
-    key_map[GS_KEYCODE_LEFT_CONTROL  & 0xff] = GS_GUI_KEY_CTRL;
-    key_map[GS_KEYCODE_RIGHT_CONTROL & 0xff] = GS_GUI_KEY_CTRL;
-    key_map[GS_KEYCODE_LEFT_ALT      & 0xff] = GS_GUI_KEY_ALT;
-    key_map[GS_KEYCODE_RIGHT_ALT     & 0xff] = GS_GUI_KEY_ALT;
-    key_map[GS_KEYCODE_ENTER         & 0xff] = GS_GUI_KEY_RETURN;
-    key_map[GS_KEYCODE_BACKSPACE     & 0xff] = GS_GUI_KEY_BACKSPACE;
+    key_map[GS_KEYCODE_LEFT_SHIFT    & 511] = GS_GUI_KEY_SHIFT;
+    key_map[GS_KEYCODE_RIGHT_SHIFT   & 511] = GS_GUI_KEY_SHIFT;
+    key_map[GS_KEYCODE_LEFT_CONTROL  & 511] = GS_GUI_KEY_CTRL;
+    key_map[GS_KEYCODE_RIGHT_CONTROL & 511] = GS_GUI_KEY_CTRL;
+    key_map[GS_KEYCODE_LEFT_ALT      & 511] = GS_GUI_KEY_ALT;
+    key_map[GS_KEYCODE_RIGHT_ALT     & 511] = GS_GUI_KEY_ALT;
+    key_map[GS_KEYCODE_ENTER         & 511] = GS_GUI_KEY_RETURN;
+    key_map[GS_KEYCODE_BACKSPACE     & 511] = GS_GUI_KEY_BACKSPACE;
+    key_map[GS_KEYCODE_TAB           & 511] = GS_GUI_KEY_TAB;
+    key_map[GS_KEYCODE_RIGHT         & 511] = GS_GUI_KEY_RIGHT;
+    key_map[GS_KEYCODE_LEFT          & 511] = GS_GUI_KEY_LEFT;
+    key_map[GS_KEYCODE_UP            & 511] = GS_GUI_KEY_UP;
+    key_map[GS_KEYCODE_DOWN          & 511] = GS_GUI_KEY_DOWN;
 } 
 
 GS_API_DECL void 
@@ -4042,9 +4052,9 @@ gs_gui_begin(gs_gui_context_t* ctx, const gs_gui_hints_t* hints)
                 { 
                     case GS_PLATFORM_KEY_DOWN:
                     case GS_PLATFORM_KEY_PRESSED:
-                    { 
-                        gs_gui_input_keydown(ctx, key_map[evt.key.keycode & 511]); 
-                    } break; 
+                    {
+                        gs_gui_input_keydown(ctx, key_map[evt.key.keycode & 511]);
+                    } break;
 
                     case GS_PLATFORM_KEY_RELEASED:
                     {
