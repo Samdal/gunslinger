@@ -189,6 +189,7 @@ GS_API_DECL void gsi_rotatev(gs_immediate_draw_t* gsi, float angle, gs_vec3 v);
 GS_API_DECL void gsi_translatef(gs_immediate_draw_t* gsi, float x, float y, float z);
 GS_API_DECL void gsi_translatev(gs_immediate_draw_t* gsi, gs_vec3 v);
 GS_API_DECL void gsi_scalef(gs_immediate_draw_t* gsi, float x, float y, float z);
+GS_API_DECL void gsi_scalev(gs_immediate_draw_t* gsi, gs_vec3 v);
 
 // Camera Utils
 GS_API_DECL void gsi_camera(gs_immediate_draw_t* gsi, gs_camera_t* cam, uint32_t width, uint32_t height);
