@@ -5536,13 +5536,11 @@ gs_gui_draw_custom(gs_gui_context_t* ctx, gs_gui_rect_t rect,
     cmd->custom.hover = ctx->hover;
     cmd->custom.focus = ctx->focus; 
     cmd->custom.hash = res;
-    cmd->custom.data = ctx->command_list.items + ctx->command_list.idx;
+    cmd->custom.data = (u8*)cmd + sizeof(gs_gui_customcommand_t);
     cmd->custom.sz = sz;
-    cmd->base.size += sz;
-    
-    // Copy data and move list forward
-    memcpy(ctx->command_list.items + ctx->command_list.idx, data, sz);
-    ctx->command_list.idx += sz;
+
+    // Copy data
+    memcpy(cmd->custom.data, data, sz);
 
 	/* reset clipping if it was set */
 	if (clipped) {gs_gui_set_clip(ctx, gs_gui_unclipped_rect);}
