@@ -1779,7 +1779,7 @@ typedef struct gs_dyn_array
     int32_t capacity;
 } gs_dyn_array;
 
-#define gs_dyn_array_head(_ARR)\
+#define gs_dyn_array_head(__ARR)\
     ((gs_dyn_array*)((uint8_t*)(__ARR) - sizeof(gs_dyn_array)))
 
 #define gs_dyn_array_size(__ARR)\
