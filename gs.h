@@ -651,7 +651,7 @@ typedef bool32_t          bool32;
 // Helper macro for compiling to nothing
 #define gs_empty_instruction(...)
 
-#define gs_array_size(__ARR) sizeof(__ARR) / sizeof(__ARR[0])
+#define gs_array_size(...) sizeof(__VA_ARGS__) / sizeof(__VA_ARGS__[0])
 
 #ifndef gs_assert
     #define gs_assert assert
@@ -1779,7 +1779,7 @@ typedef struct gs_dyn_array
     int32_t capacity;
 } gs_dyn_array;
 
-#define gs_dyn_array_head(__ARR)\
+#define gs_dyn_array_head(...)\
     ((gs_dyn_array*)((uint8_t*)(__ARR) - sizeof(gs_dyn_array)))
 
 #define gs_dyn_array_size(__ARR)\
