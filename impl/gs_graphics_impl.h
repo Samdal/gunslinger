@@ -1897,6 +1897,8 @@ void gs_graphics_command_buffer_submit_impl(gs_command_buffer_t* cb)
         {
             case GS_OPENGL_OP_BEGIN_RENDER_PASS:
             {
+                GSGS_PROF_SCOPE("GS_OPENGL_OP_BEGIN_RENDER_PASS");
+
                 // Bind render pass stuff
                 gs_byte_buffer_readc(&cb->commands, uint32_t, rpid);
 
@@ -1938,6 +1940,8 @@ void gs_graphics_command_buffer_submit_impl(gs_command_buffer_t* cb)
 
             case GS_OPENGL_OP_END_RENDER_PASS:
             {
+                GSGS_PROF_SCOPE("GS_OPENGL_OP_END_RENDER_PASS");
+
                 gsgl_data_t* ogl = (gsgl_data_t*)gs_subsystem(graphics)->user_data;
                 gsgl_reset_data_cache(&ogl->cache);
 
@@ -1955,6 +1959,9 @@ void gs_graphics_command_buffer_submit_impl(gs_command_buffer_t* cb)
 
             case GS_OPENGL_OP_CLEAR:
             {
+
+                GSGS_PROF_SCOPE("GS_OPENGL_OP_CLEAR");
+
                 // Actions
                 gs_byte_buffer_readc(&cb->commands, uint32_t, action_count);
                 for (uint32_t j = 0; j < action_count; ++j)
@@ -1986,6 +1993,8 @@ void gs_graphics_command_buffer_submit_impl(gs_command_buffer_t* cb)
 
             case GS_OPENGL_OP_SET_VIEWPORT:
             {
+                GSGS_PROF_SCOPE("GS_OPENGL_OP_SET_VIEWPORT");
+
                 gs_byte_buffer_readc(&cb->commands, uint32_t, x);
                 gs_byte_buffer_readc(&cb->commands, uint32_t, y);
                 gs_byte_buffer_readc(&cb->commands, uint32_t, w);
@@ -1996,6 +2005,8 @@ void gs_graphics_command_buffer_submit_impl(gs_command_buffer_t* cb)
 
             case GS_OPENGL_OP_SET_VIEW_SCISSOR:
             {
+                GSGS_PROF_SCOPE("GS_OPENGL_OP_SET_VIEW_SCISSOR");
+
                 gs_byte_buffer_readc(&cb->commands, uint32_t, x);
                 gs_byte_buffer_readc(&cb->commands, uint32_t, y);
                 gs_byte_buffer_readc(&cb->commands, uint32_t, w);
@@ -2007,6 +2018,8 @@ void gs_graphics_command_buffer_submit_impl(gs_command_buffer_t* cb)
 
             case GS_OPENGL_OP_APPLY_BINDINGS:
             {
+                GSGS_PROF_SCOPE("GS_OPENGL_OP_APPLY_BINDINGS");
+
                 gs_byte_buffer_readc(&cb->commands, uint32_t, ct);
 
                 // Determine if need to clear any previous vertex buffers here
@@ -2464,6 +2477,8 @@ void gs_graphics_command_buffer_submit_impl(gs_command_buffer_t* cb)
 
             case GS_OPENGL_OP_BIND_PIPELINE:
             {
+                GSGS_PROF_SCOPE("GS_OPENGL_OP_BIND_PIPELINE");
+
                 // Bind pipeline stuff
                 gs_byte_buffer_readc(&cb->commands, uint32_t, pipid);
 
@@ -2570,6 +2585,8 @@ void gs_graphics_command_buffer_submit_impl(gs_command_buffer_t* cb)
 
             case GS_OPENGL_OP_DISPATCH_COMPUTE:
             {
+                GSGS_PROF_SCOPE("GS_OPENGL_OP_DISPATCH_COMPUTE");
+
                 gs_byte_buffer_readc(&cb->commands, uint32_t, num_x_groups);
                 gs_byte_buffer_readc(&cb->commands, uint32_t, num_y_groups);
                 gs_byte_buffer_readc(&cb->commands, uint32_t, num_z_groups);
@@ -2607,6 +2624,8 @@ void gs_graphics_command_buffer_submit_impl(gs_command_buffer_t* cb)
 
             case GS_OPENGL_OP_DRAW:
             {
+                GSGS_PROF_SCOPE("GS_OPENGL_OP_DRAW");
+
                 // Grab currently bound pipeline (TODO(john): assert if this isn't valid)
                 gsgl_pipeline_t* pip = gs_slot_array_getp(ogl->pipelines, ogl->cache.pipeline.id);
 
@@ -2718,6 +2737,8 @@ void gs_graphics_command_buffer_submit_impl(gs_command_buffer_t* cb)
 
             case GS_OPENGL_OP_REQUEST_TEXTURE_UPDATE:
             {
+                GSGS_PROF_SCOPE("GS_OPENGL_OP_REQUEST_TEXTURE_UPDATE");
+
                 gs_byte_buffer_readc(&cb->commands, uint32_t, tex_slot_id);
                 gs_byte_buffer_readc(&cb->commands, gs_graphics_texture_desc_t, desc);
                 gs_byte_buffer_readc(&cb->commands, size_t, data_size);
@@ -2751,6 +2772,8 @@ void gs_graphics_command_buffer_submit_impl(gs_command_buffer_t* cb)
 
             case GS_OPENGL_OP_REQUEST_BUFFER_UPDATE:
             {
+                GSGS_PROF_SCOPE("GS_OPENGL_OP_REQUEST_BUFFER_UPDATE");
+
                 gsgl_data_t* ogl = (gsgl_data_t*)gs_subsystem(graphics)->user_data;
 
                 // Read handle id
