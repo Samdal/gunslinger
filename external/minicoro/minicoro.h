@@ -260,6 +260,7 @@ struct mco_coro {
   void* tsan_prev_fiber; /* Used by thread sanitizer. */
   void* tsan_fiber; /* Used by thread sanitizer. */
   size_t magic_number; /* Used to check stack overflow. */
+  gs_arena* _gs_mco_scratch_pool[_gs_scratch_count];
 };
 
 /* Structure used to initialize a coroutine. */
@@ -1713,6 +1714,11 @@ mco_result mco_destroy(mco_coro* co) {
   if(!co) {
     MCO_LOG("attempt to destroy an invalid coroutine");
     return MCO_INVALID_COROUTINE;
+  }
+  if (co->_gs_mco_scratch_pool[0]) {
+    for (uint64_t i = 0; i < _gs_scratch_count; i++) {
+      gs_arena_release(co->_gs_mco_scratch_pool[i]);
+    }
   }
   /* Uninitialize the coroutine first. */
   mco_result res = mco_uninit(co);

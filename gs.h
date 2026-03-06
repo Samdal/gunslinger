@@ -2817,6 +2817,11 @@ GS_API_DECL void          gs_arena_end_temp(gs_arena_temp temp);
 
 // arena scratch pool
 
+#ifndef _gs_scratch_count
+#define _gs_scratch_count 2
+#endif
+
+
 GS_API_DECL gs_arena_temp gs_arena_get_scratch(gs_arena **conflicts, uint64_t count);
 #define gs_arena_release_scratch(scratch) gs_arena_end_temp(scratch)
 
@@ -7835,10 +7840,6 @@ gs_arena_end_temp(gs_arena_temp temp)
 // arena scratch pool
 
 
-#ifndef _gs_scratch_count
-#define _gs_scratch_count 2
-#endif
-
 #ifdef _WIN32
 __declspec(thread) gs_arena* _gs_thread_scratch_pool[_gs_scratch_count] = {0, 0};
 #else
@@ -7848,7 +7849,14 @@ __thread gs_arena* _gs_thread_scratch_pool[_gs_scratch_count] = {0, 0};
 GS_API_DECL gs_arena_temp
 gs_arena_get_scratch(gs_arena **conflicts, uint64_t count)
 {
-    gs_arena** scratch_pool = _gs_thread_scratch_pool;
+    mco_coro* mco = mco_running();
+    gs_arena** scratch_pool = NULL;
+    if (mco) {
+        scratch_pool = mco->_gs_mco_scratch_pool;
+    } else {
+        scratch_pool = _gs_thread_scratch_pool;
+    }
+
     if (scratch_pool[0] == 0) {
         gs_arena **arena_ptr = scratch_pool;
         for (uint64_t i = 0; i < _gs_scratch_count; i += 1, arena_ptr += 1) {
