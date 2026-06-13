@@ -313,6 +313,7 @@ GSI_UNIFORM_TEXTURE2D
 "  vec4 tex_col = texture("
 GSI_UNIFORM_TEXTURE2D
 ", uv);\n"
+"  if (tex_col.a <= 0.0) discard;\n"
 "  frag_color = color * tex_col;\n"
 "}\n";
 
