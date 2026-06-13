@@ -8840,6 +8840,10 @@ bool gs_asset_font_load_from_file(const char* path, void* out, uint32_t point_si
 {
     size_t len = 0;
     char* ttf = gs_platform_read_file_contents(path, "rb", &len);
+    if (!ttf) {
+        gs_println("Warning: Font: Unable to read file '%s'", path);
+        return false;
+    }
     if (!point_size) {
         gs_println("Warning: Font: %s: Point size not declared. Setting to default 16.", path);
         point_size = 16;
